@@ -40,7 +40,7 @@ public class DemoApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-
+/*
 		Employee[] employees = new Employee[6];
 
 		for(int i=1; i<6; i++){
@@ -77,6 +77,8 @@ public class DemoApplication implements CommandLineRunner {
 			logins[i].setPassword("password"+i);
 			loginRepository.save(logins[i]);
 		}
+		
+ */
 
 
 
