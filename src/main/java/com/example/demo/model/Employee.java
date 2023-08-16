@@ -37,6 +37,11 @@ public class Employee {
     @JsonIgnore
     private List<PhoneNums> phoneNums = new ArrayList<>();
 
+    @OneToOne(mappedBy = "employee",cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Login login;
+
+
     public void addPhone(PhoneNums phone){
         this.phoneNums.add(phone);
     }

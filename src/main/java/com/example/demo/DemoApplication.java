@@ -1,9 +1,11 @@
 package com.example.demo;
 
 import com.example.demo.model.Employee;
+import com.example.demo.model.Login;
 import com.example.demo.model.PhoneNums;
 import com.example.demo.model.Position;
 import com.example.demo.repository.EmployeeRepository;
+import com.example.demo.repository.LoginRepository;
 import com.example.demo.repository.PhoneNumRepository;
 import com.example.demo.repository.PositionRepository;
 import org.aspectj.asm.IModelFilter;
@@ -32,13 +34,16 @@ public class DemoApplication implements CommandLineRunner {
 	@Autowired
 	private PhoneNumRepository phoneNumRepository;
 
+	@Autowired
+	private LoginRepository loginRepository;
+
 	@Override
 	public void run(String... args) throws Exception {
 
 
 		Employee[] employees = new Employee[6];
 
-		for(int i=1; i<=5; i++){
+		for(int i=1; i<6; i++){
 			employees[i] = new Employee();
 			employees[i].setFirstName("Bahaa"+i);
 			employees[i].setLastName("Assad"+i);
@@ -62,6 +67,15 @@ public class DemoApplication implements CommandLineRunner {
 			phones[i] = new PhoneNums();
 			phones[i].setNum("000000"+i);
 			phoneNumRepository.save(phones[i]);
+		}
+
+		Login[] logins = new Login[6];
+
+		for(int i=1; i<6; i++){
+			logins[i] = new Login();
+			logins[i].setEmail("email"+i);
+			logins[i].setPassword("password"+i);
+			loginRepository.save(logins[i]);
 		}
 
 
