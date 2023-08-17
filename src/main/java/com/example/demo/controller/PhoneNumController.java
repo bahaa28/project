@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import com.example.demo.exception.ResourceNotFoundEcxeption;
-import com.example.demo.model.Employee;
 import com.example.demo.model.PhoneNums;
 import com.example.demo.repository.EmployeeRepository;
 import com.example.demo.repository.PhoneNumRepository;
@@ -10,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.ws.Response;
 import java.util.List;
 
 @RestController

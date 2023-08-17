@@ -77,7 +77,7 @@ public class DemoApplication implements CommandLineRunner {
 			logins[i].setPassword("password"+i);
 			loginRepository.save(logins[i]);
 		}
-		
+
  */
 
 
