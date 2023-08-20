@@ -1,14 +1,10 @@
 package com.example.demo;
 
 import com.example.demo.model.Employee;
-import com.example.demo.model.Login;
 import com.example.demo.model.PhoneNums;
 import com.example.demo.model.Position;
-import com.example.demo.repository.EmployeeRepository;
-import com.example.demo.repository.LoginRepository;
-import com.example.demo.repository.PhoneNumRepository;
-import com.example.demo.repository.PositionRepository;
-import org.aspectj.asm.IModelFilter;
+import com.example.demo.model.Role;
+import com.example.demo.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -35,7 +31,10 @@ public class DemoApplication implements CommandLineRunner {
 	private PhoneNumRepository phoneNumRepository;
 
 	@Autowired
-	private LoginRepository loginRepository;
+	private UserEntityRepository userEntityRepository;
+
+	@Autowired
+	private RoleRepository roleRepository;
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -47,8 +46,11 @@ public class DemoApplication implements CommandLineRunner {
 			employees[i] = new Employee();
 			employees[i].setFirstName("Bahaa"+i);
 			employees[i].setLastName("Assad"+i);
-			employees[i].setEmailId("bahaaassad"+i+"@gmail.com");
+			employees[i].setUsername("bahaaassad"+i+"@gmail.com");
 			employees[i].setEmployees_positions(new ArrayList<Position>());
+			employees[i].setPhoneNums(new ArrayList<PhoneNums>());
+			employees[i].setPassword("{noop}pass"+i);
+			employees[i].setRole(new ArrayList<Role>());
 			employeeRepository.save(employees[i]);
 		}
 
@@ -69,18 +71,13 @@ public class DemoApplication implements CommandLineRunner {
 			phoneNumRepository.save(phones[i]);
 		}
 
-		Login[] logins = new Login[6];
-
-		for(int i=1; i<6; i++){
-			logins[i] = new Login();
-			logins[i].setEmail("email"+i);
-			logins[i].setPassword("password"+i);
-			loginRepository.save(logins[i]);
-		}
-
- */
-
-
-
+		Role[] roles = new Role[2];
+		roles[0] = new Role();
+		roles[1] = new Role();
+		roles[0].setName("USER");
+		roles[1].setName("ADMIN");
+		roleRepository.save(roles[0]);
+		roleRepository.save(roles[1]);
+*/
 	}
 }

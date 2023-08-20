@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -35,7 +36,7 @@ public class PositionController {
     }
 
     @PostMapping
-    public Position addPosition(@RequestBody Position position){
+    public Position addPosition(@Valid @RequestBody Position position){
         return positionRepository.save(position);
     }
 
@@ -49,7 +50,10 @@ public class PositionController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Position> updatePositionById(@PathVariable long id, @RequestBody Position position){
+    public ResponseEntity<Position> updatePositionById(
+            @PathVariable long id,
+            @Valid @RequestBody Position position
+    ){
         Position updated = positionRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundEcxeption("position not exist with id:"+id));
 

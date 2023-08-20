@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Data
 @AllArgsConstructor
@@ -19,9 +21,11 @@ public class PhoneNums {
     long id;
 
     @Column(name="num")
+    @NotNull(message = "phone number should not be null")
+    @NotEmpty(message = "Phone number must not be empty")
     String num;
 
     @ManyToOne
-    @JoinColumn(name = "employee_id", referencedColumnName = "id")
-    private Employee employee;
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private UserEntity userEntity;
 }

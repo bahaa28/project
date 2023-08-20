@@ -3,47 +3,33 @@ package com.example.demo.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name="employees")
-public class Employee {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@OnDelete(action = OnDeleteAction.CASCADE)
+public class Employee extends UserEntity {
 
     @NotNull
+    @NotEmpty(message = "first name must not be empty")
     @Column(name="first_name")
     private String firstName;
 
     @NotNull
+    @NotEmpty(message = "last name must not be empty")
     @Column(name="last_name")
     private String lastName;
-
-    @Column(name="email_id")
-    private String emailId;
 
     @JsonIgnore
     @ManyToMany (mappedBy = "employees_positions")
     private List<Position> employees_positions = new ArrayList<Position>();
-
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private List<PhoneNums> phoneNums = new ArrayList<>();
-
-    @OneToOne(mappedBy = "employee",cascade = CascadeType.ALL)
-    @JsonIgnore
-    private Login login;
-
-
-    public void addPhone(PhoneNums phone){
-        this.phoneNums.add(phone);
-    }
 }

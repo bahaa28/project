@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -22,6 +24,8 @@ public class Position {
     private long id;
 
     @Column(name="name")
+    @NotNull(message = "position name should not be null")
+    @NotEmpty(message = "position name must not be empty")
     private String name;
 
     @ManyToMany()

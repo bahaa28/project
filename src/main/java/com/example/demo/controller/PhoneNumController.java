@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -34,7 +35,7 @@ public class PhoneNumController {
     }
 
     @PostMapping
-    public PhoneNums addPhoneNum(@RequestBody PhoneNums phone){
+    public PhoneNums addPhoneNum(@Valid @RequestBody PhoneNums phone){
         return phoneNumRepository.save(phone);
     }
 
@@ -49,12 +50,13 @@ public class PhoneNumController {
     @PutMapping("{id}")
     public ResponseEntity<PhoneNums> updatePhoneById(
             @PathVariable long id,
-            @RequestBody PhoneNums phone
+            @Valid @RequestBody PhoneNums phone
     ){
         PhoneNums updatedPhone = phoneNumRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundEcxeption("phone does not exists with id:"+id));
+
         updatedPhone.setNum(phone.getNum());
-        updatedPhone.setEmployee(phone.getEmployee());
+        updatedPhone.setUserEntity(phone.getUserEntity());
 
         phoneNumRepository.save(updatedPhone);
 

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -29,7 +30,7 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public Employee createEmployee(@RequestBody Employee employee){
+    public Employee createEmployee(@Valid @RequestBody Employee employee){
         return employeeRepository.save(employee);
     }
 
@@ -41,12 +42,18 @@ public class EmployeeController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Employee> updateEmployeeById(@PathVariable long id, @RequestBody Employee employee){
+    public ResponseEntity<Employee> updateEmployeeById(@PathVariable long id,@Valid @RequestBody Employee employee){
         Employee updatedEmployee = employeeRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundEcxeption("employee not exist with id:"+id));
+
         updatedEmployee.setFirstName(employee.getFirstName());
         updatedEmployee.setLastName(employee.getLastName());
-        updatedEmployee.setEmailId(employee.getEmailId());
+        updatedEmployee.setEmployees_positions(employee.getEmployees_positions());
+        updatedEmployee.setUsername(employee.getUsername());
+        updatedEmployee.setId(employee.getId());
+        updatedEmployee.setPassword(employee.getPassword());
+        updatedEmployee.setRole(employee.getRole());
+        updatedEmployee.setPhoneNums(employee.getPhoneNums());
 
         employeeRepository.save(updatedEmployee);
 
@@ -56,34 +63,10 @@ public class EmployeeController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<Employee> deleteEmployeeById(@PathVariable long id){
-        Employee deletedEmployee = employeeRepository.findById(id).orElseThrow(() ->
+        Employee deletedEmployee = (Employee) employeeRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundEcxeption("employee not exist with id:"+id));
         employeeRepository.delete(deletedEmployee);
 
         return new ResponseEntity<Employee>(HttpStatus.NO_CONTENT);
     }
-
-    @PutMapping("{employee_id}/phoneNums/{phoneNum_id}")
-    @Transactional
-    public ResponseEntity<Employee> putPhoneToEmployee(
-            @PathVariable long employee_id,
-            @PathVariable long phoneNum_id
-    ) {
-        Employee employee = employeeRepository.findById(employee_id).orElseThrow(() ->
-                new ResourceNotFoundEcxeption("Employee not found with id:"+employee_id));
-        PhoneNums phone = phoneNumRepository.findById(phoneNum_id).orElseThrow(() ->
-                new ResourceNotFoundEcxeption("Phone number not found with id:"+phoneNum_id));
-
-        // Set the relationship on both sides
-        phone.setEmployee(employee);
-        employee.addPhone(phone);
-
-        // Save both entities
-        employeeRepository.save(employee);
-        phoneNumRepository.save(phone);
-
-        return ResponseEntity.ok(employee);
-    }
-
-
 }
