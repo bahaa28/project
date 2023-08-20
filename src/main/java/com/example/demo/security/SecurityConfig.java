@@ -10,13 +10,10 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -24,10 +21,13 @@ public class SecurityConfig{
 
 
     @Autowired
-    JwtAuthEntryPoint jwtAuthEntryPoint;
+    private JwtAuthEntryPoint jwtAuthEntryPoint;
 
     @Autowired
-    CustomUserDetailSurvice customUserDetailSurvice;
+    private CustomUserDetailService customUserDetailService;
+
+    @Autowired
+    private JWTAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
@@ -41,37 +41,15 @@ public class SecurityConfig{
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/v1/auth/register")
-                .permitAll()
-                .antMatchers("/api/v1/auth/login")
+                .antMatchers("/api/v1/auth/register", "/api/v1/auth/login")
                 .permitAll()
                 .antMatchers("/api/**")
-                .authenticated()
-                .anyRequest()
-                .authenticated()
+                .fullyAuthenticated()
                 .and()
-                .httpBasic();
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
-
-/*
-    @Bean
-    public UserDetailsService users(){
-        UserDetails admin = User.builder()
-                .username("admin")
-                .password("{noop}password")
-                .roles("ADMIN")
-                .build();
-        UserDetails user = User.builder()
-                .username("user")
-                .password("{noop}password")
-                .roles("USER")
-                .build();
-        return new InMemoryUserDetailsManager(admin, user);
-
-    }
-*/
 
     @Bean
     AuthenticationManager authenticationManager(

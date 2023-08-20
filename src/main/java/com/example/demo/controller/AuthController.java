@@ -1,11 +1,13 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.AuthResponseDto;
 import com.example.demo.dto.LoginDto;
 import com.example.demo.dto.RegesterDto;
 import com.example.demo.model.Role;
 import com.example.demo.model.UserEntity;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserEntityRepository;
+import com.example.demo.security.JWTGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +40,9 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private JWTGenerator jwtGenerator;
+
     @PostMapping("register")
     public ResponseEntity<String> regester(@Valid @RequestBody RegesterDto regesterDto) {
         if (userEntityRepository.existsByUsername(regesterDto.getUsername())) {
@@ -56,12 +61,15 @@ public class AuthController {
 
 
     @PostMapping("login")
-    public ResponseEntity<String> login(@Valid @RequestBody LoginDto loginDto){
+    public ResponseEntity<AuthResponseDto> login(@Valid @RequestBody LoginDto loginDto){
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return new ResponseEntity<String>("USER login sucess", HttpStatus.OK);
+        String token = jwtGenerator.generateToken(authentication);
+
+
+        return new ResponseEntity<AuthResponseDto>(new AuthResponseDto(token), HttpStatus.OK);
     }
 
 

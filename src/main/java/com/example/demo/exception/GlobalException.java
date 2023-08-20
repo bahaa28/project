@@ -2,6 +2,7 @@ package com.example.demo.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -42,6 +43,20 @@ public class GlobalException {
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<ErrorObject> handleUnAuthorizedException(
             UnauthorizedException ex,
+            WebRequest request
+    ) {
+        ErrorObject errorObject = new ErrorObject(
+                HttpStatus.UNAUTHORIZED.value(),
+                ex.getMessage(),
+                new Date()
+        );
+
+        return new ResponseEntity<ErrorObject>(errorObject, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErrorObject> handleBadCredentialsException(
+            BadCredentialsException ex,
             WebRequest request
     ) {
         ErrorObject errorObject = new ErrorObject(
